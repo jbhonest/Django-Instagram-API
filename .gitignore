@@ -2,5 +2,6 @@
 /venv
 instagram/__pycache__
 content/__pycache__
+content/migrations/__pycache__
 instagram/local_settings.py
 /media
