@@ -1,3 +1,6 @@
 /db.sqlite3
 /venv
-instagram/__pycache__/local_settings.cpython-312.pyc
+instagram/__pycache__
+instagram/local_settings.py
+
+/media
