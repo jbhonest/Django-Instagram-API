@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.db.models import Count
-from .models import Post, Image
+from .models import Post, Image, Mention
 from user_activity.models import Comment
 
 
@@ -33,3 +33,9 @@ class PostAdmin(admin.ModelAdmin):
 class ImageAdmin(admin.ModelAdmin):
     list_display = ('id', 'post', 'image', 'created_at')
     list_filter = ('post', 'created_at')
+
+
+@admin.register(Mention)
+class MentionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'post', 'user', 'created_at')
+    list_filter = ('post', 'user', 'created_at')

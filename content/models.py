@@ -20,6 +20,20 @@ class Post(models.Model):
         return self.caption
 
 
+class Mention(models.Model):
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name='mentions')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = [['post', 'user']]
+
+    def __str__(self):
+        return str(self.id)
+
+
 class Image(models.Model):
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name='images')
