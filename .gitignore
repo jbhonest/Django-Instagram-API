@@ -1,7 +1,9 @@
 /db.sqlite3
 /venv
+/media
 instagram/__pycache__
+instagram/local_settings.py
 content/__pycache__
 content/migrations/__pycache__
-instagram/local_settings.py
-/media
+
+
