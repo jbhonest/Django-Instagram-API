@@ -20,16 +20,16 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'caption', 'user', 'images', 'comments', 'created_at')
+        fields = ('id', 'caption', 'user', 'created_at', 'images', 'comments')
 
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ('id', 'post', 'text', 'user')
+        fields = ('id', 'post', 'text', 'user', 'created_at')
 
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ('id', 'post', 'image')
+        fields = ('id', 'post', 'image', 'created_at')
