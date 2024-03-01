@@ -1,9 +1,8 @@
 from rest_framework import routers
-from .views import PostViewSet, CommentViewSet, ImageViewSet
+from .views import PostViewSet, ImageViewSet
 
 router = routers.DefaultRouter()
 router.register('posts', PostViewSet)
-router.register('comments', CommentViewSet)
 router.register('images', ImageViewSet)
 
 # URLConf
