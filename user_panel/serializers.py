@@ -15,4 +15,4 @@ class FollowSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Follow
-        fields = ['follower', 'following', 'created_at']
+        fields = ['id', 'follower', 'following', 'created_at']
