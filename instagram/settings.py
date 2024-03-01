@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # My Apps
     'content.apps.ContentConfig',
     'user_activity.apps.UserActivityConfig',
+    'user_panel.apps.UserPanelConfig',
 
 ]
 

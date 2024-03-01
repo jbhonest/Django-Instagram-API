@@ -7,4 +7,7 @@ content/__pycache__
 content/migrations/__pycache__
 user_activity/__pycache__
 user_activity/migrations/__pycache__
+user_panel/__pycache__
+user_panel/migrations/__pycache__
+
 
