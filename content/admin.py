@@ -33,11 +33,11 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ('id', 'post', 'text', 'user',
                     'created_at')
 
-    list_filter = ('post', 'user')
+    list_filter = ('post', 'user', 'created_at')
     search_fields = ('text',)
 
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
     list_display = ('id', 'post', 'image', 'created_at')
-    list_filter = ('post',)
+    list_filter = ('post', 'created_at')
