@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.db.models import Count
-from .models import Post, Comment, Image
+from .models import Post, Image
+from user_activity.models import Comment
 
 
 class ImageInline(admin.TabularInline):
@@ -26,15 +27,6 @@ class PostAdmin(admin.ModelAdmin):
     @admin.display(ordering='comment_count')
     def comment_count(self, post):
         return post.comments.count()
-
-
-@admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'post', 'text', 'user',
-                    'created_at')
-
-    list_filter = ('post', 'user', 'created_at')
-    search_fields = ('text',)
 
 
 @admin.register(Image)

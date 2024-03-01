@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Post, Comment, Image
+from .models import Post, Image
+from user_activity.models import Comment
 
 
 class SimpleImageSerializer(serializers.ModelSerializer):
