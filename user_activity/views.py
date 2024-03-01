@@ -1,4 +1,7 @@
 from rest_framework import viewsets, filters, permissions
+from rest_framework.response import Response
+from rest_framework import status
+from django.db import IntegrityError
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Comment, Like
 from .serializers import CommentSerializer, LikeSerializer
@@ -27,6 +30,12 @@ class LikeViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter, filters.SearchFilter,)
     filterset_fields = ('post', 'user')
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except IntegrityError:
+            return Response({'error': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
