@@ -22,4 +22,5 @@ urlpatterns = [
     path(getattr(settings, 'ADMIN_URL'), admin.site.urls),
     path('content/', include('content.urls')),
     path('user_activity/', include('user_activity.urls')),
+    path('user_panel/', include('user_panel.urls')),
 ]
