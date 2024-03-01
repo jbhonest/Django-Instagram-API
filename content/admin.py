@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.db.models import Count
-from .models import Post, Image, Mention
+from .models import Post, Image, Mention, Hashtag
 from user_activity.models import Comment
 
 
@@ -9,8 +9,18 @@ class ImageInline(admin.TabularInline):
     extra = 1
 
 
+class HashtagInline(admin.TabularInline):
+    model = Hashtag
+    extra = 1
+
+
 class CommentInline(admin.TabularInline):
     model = Comment
+    extra = 1
+
+
+class MentionInline(admin.TabularInline):
+    model = Mention
     extra = 1
 
 
@@ -19,7 +29,7 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ('id', 'caption', 'user', 'comment_count', 'created_at')
     list_filter = ('user', 'created_at')
     search_fields = ('caption',)
-    inlines = [ImageInline, CommentInline]
+    inlines = [ImageInline, HashtagInline, MentionInline, CommentInline]
 
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(comment_count=Count('comments'))
@@ -39,3 +49,9 @@ class ImageAdmin(admin.ModelAdmin):
 class MentionAdmin(admin.ModelAdmin):
     list_display = ('id', 'post', 'user', 'created_at')
     list_filter = ('post', 'user', 'created_at')
+
+
+@admin.register(Hashtag)
+class HashtagAdmin(admin.ModelAdmin):
+    list_display = ('id', 'post', 'title', 'created_at')
+    list_filter = ('post', 'title', 'created_at')

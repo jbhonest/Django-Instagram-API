@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Image, Mention
+from .models import Post, Image, Mention, Hashtag
 from user_activity.models import Comment, Like
 
 
@@ -7,6 +7,12 @@ class SimpleImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = ['id', 'image', 'created_at']
+
+
+class SimpleHashtagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hashtag
+        fields = ['id', 'title', 'created_at']
 
 
 class SimpleMentionSerializer(serializers.ModelSerializer):
@@ -29,6 +35,7 @@ class SimpleLikeSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     images = SimpleImageSerializer(many=True, read_only=True)
+    hashtags = SimpleHashtagSerializer(many=True, read_only=True)
     comments = SimpleCommentSerializer(many=True, read_only=True)
     likes = SimpleLikeSerializer(many=True, read_only=True)
     mentions = SimpleMentionSerializer(many=True, read_only=True)
@@ -36,7 +43,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('id', 'caption', 'user', 'created_at',
-                  'images', 'mentions', 'comments', 'likes')
+                  'images', 'hashtags', 'mentions', 'comments', 'likes')
 
     def get_fields(self):
         fields = super().get_fields()

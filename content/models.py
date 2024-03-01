@@ -34,6 +34,19 @@ class Mention(models.Model):
         return str(self.id)
 
 
+class Hashtag(models.Model):
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name='hashtags')
+    title = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = [['post', 'title']]
+
+    def __str__(self):
+        return self.title
+
+
 class Image(models.Model):
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name='images')
