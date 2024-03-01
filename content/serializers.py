@@ -15,13 +15,21 @@ class SimpleCommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'text', 'created_at']
 
 
+class SimpleLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ['id', 'user', 'created_at']
+
+
 class PostSerializer(serializers.ModelSerializer):
     images = SimpleImageSerializer(many=True, read_only=True)
     comments = SimpleCommentSerializer(many=True, read_only=True)
+    likes = SimpleLikeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Post
-        fields = ('id', 'caption', 'user', 'created_at', 'images', 'comments')
+        fields = ('id', 'caption', 'user', 'created_at',
+                  'images', 'comments', 'likes')
 
     def get_fields(self):
         fields = super().get_fields()
