@@ -1,10 +1,12 @@
 from rest_framework import routers
-from .views import PostViewSet, ImageViewSet, MentionViewSet
+from .views import PostViewSet, ImageViewSet, MentionViewSet, HashtagViewSet
 
 router = routers.DefaultRouter()
 router.register('posts', PostViewSet)
 router.register('images', ImageViewSet)
+router.register('hashtags', HashtagViewSet)
 router.register('mentions', MentionViewSet)
+
 
 # URLConf
 urlpatterns = router.urls

@@ -63,3 +63,9 @@ class MentionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Mention
         fields = ('id', 'post', 'user', 'created_at')
+
+
+class HashtagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hashtag
+        fields = ('id', 'post', 'title', 'created_at')

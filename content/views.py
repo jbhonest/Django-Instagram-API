@@ -1,7 +1,7 @@
 from rest_framework import viewsets, filters, permissions
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Post, Image, Mention
-from .serializers import PostSerializer, ImageSerializer, MentionSerializer
+from .models import Post, Image, Mention, Hashtag
+from .serializers import PostSerializer, ImageSerializer, MentionSerializer, HashtagSerializer
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -36,3 +36,12 @@ class MentionViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter, filters.SearchFilter,)
     filterset_fields = ('post', 'user')
+
+
+class HashtagViewSet(viewsets.ModelViewSet):
+    serializer_class = HashtagSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Hashtag.objects.order_by('-pk')
+    filter_backends = (DjangoFilterBackend,
+                       filters.OrderingFilter, filters.SearchFilter,)
+    filterset_fields = ('post', 'title')
