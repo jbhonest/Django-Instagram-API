@@ -4,11 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets, filters
 from rest_framework import permissions
-from .models import Follow
+from .models import Follow, CustomUser
 from .serializers import FollowSerializer, UserProfileSerializer
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
 
 
 class FollowViewSet(viewsets.ModelViewSet):
@@ -37,12 +34,12 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     filterset_fields = ('username',)
 
     def get_queryset(self):
-        return User.objects.filter(id=self.request.user.id)
+        return CustomUser.objects.filter(id=self.request.user.id)
 
 
 class UserRegistrationViewSet(viewsets.ModelViewSet):
     serializer_class = UserProfileSerializer
-    queryset = User.objects.none()
+    queryset = CustomUser.objects.none()
     permission_classes = (permissions.AllowAny,)
 
     def create(self, request, *args, **kwargs):

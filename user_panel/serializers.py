@@ -1,11 +1,10 @@
 from rest_framework import serializers
-from .models import Follow
-from django.contrib.auth import get_user_model
+from .models import Follow, CustomUser
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = get_user_model()
+        model = CustomUser
         fields = ['id', 'username']
 
 
@@ -21,7 +20,7 @@ class FollowSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = get_user_model()
+        model = CustomUser
         fields = ('id', 'username', 'password',
-                  'email', 'first_name', 'last_name')
+                  'email', 'first_name', 'last_name', 'is_public')
         extra_kwargs = {'password': {'write_only': True}}
