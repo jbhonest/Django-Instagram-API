@@ -17,3 +17,11 @@ class FollowSerializer(serializers.ModelSerializer):
         model = Follow
         fields = ['id', 'follower', 'following',
                   'following_info', 'created_at']
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'username', 'password',
+                  'email', 'first_name', 'last_name')
+        extra_kwargs = {'password': {'write_only': True}}

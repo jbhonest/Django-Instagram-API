@@ -5,7 +5,10 @@ from rest_framework import status
 from rest_framework import viewsets, filters
 from rest_framework import permissions
 from .models import Follow
-from .serializers import FollowSerializer
+from .serializers import FollowSerializer, UserProfileSerializer
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class FollowViewSet(viewsets.ModelViewSet):
@@ -24,3 +27,27 @@ class FollowViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(follower=self.request.user)
+
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = (DjangoFilterBackend,
+                       filters.OrderingFilter, filters.SearchFilter,)
+    filterset_fields = ('username',)
+
+    def get_queryset(self):
+        return User.objects.filter(id=self.request.user.id)
+
+
+class UserRegistrationViewSet(viewsets.ModelViewSet):
+    serializer_class = UserProfileSerializer
+    queryset = User.objects.none()
+    permission_classes = (permissions.AllowAny,)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

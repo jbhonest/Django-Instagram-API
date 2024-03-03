@@ -34,6 +34,7 @@ INSTALLED_APPS = [
 
     # Trusted Apps
     'rest_framework',
+    'rest_framework.authtoken',
     'django_filters',
     'rest_framework_simplejwt',
 
@@ -133,6 +134,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication')
     if DEBUG else ('rest_framework_simplejwt.authentication.JWTAuthentication',)
 }
