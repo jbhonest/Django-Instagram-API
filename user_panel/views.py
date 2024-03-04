@@ -3,11 +3,11 @@ from django.db import IntegrityError
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, generics
 from rest_framework import permissions
 from rest_framework.mixins import DestroyModelMixin, RetrieveModelMixin, UpdateModelMixin, ListModelMixin
 from .models import Follow, CustomUser
-from .serializers import FollowSerializer, UserProfileSerializer, UserListSerializer
+from .serializers import FollowSerializer, UserProfileSerializer, UserListSerializer, RegisterSerializer
 
 
 class FollowViewSet(viewsets.ModelViewSet):
@@ -53,15 +53,15 @@ class UserViewSet(ListModelMixin, RetrieveModelMixin,
         return CustomUser.objects.order_by('-pk')
 
 
-class UserRegistrationViewSet(viewsets.ModelViewSet):
-    serializer_class = UserProfileSerializer
-    queryset = CustomUser.objects.none()
-    permission_classes = (permissions.AllowAny,)
+class RegisterApi(generics.GenericAPIView):
+    serializer_class = RegisterSerializer
 
-    def create(self, request, *args, **kwargs):
+    def post(self, request, *args,  **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        token, created = Token.objects.get_or_create(user=serializer.instance)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        user = serializer.save()
+        token, _ = Token.objects.get_or_create(user=serializer.instance)
+        return Response({
+            "user": UserProfileSerializer(user, context=self.get_serializer_context()).data,
+            "message": "User Created Successfully.  Now perform Login to get your token",
+        })
