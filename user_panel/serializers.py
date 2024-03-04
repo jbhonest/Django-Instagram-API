@@ -18,6 +18,15 @@ class FollowSerializer(serializers.ModelSerializer):
                   'following_info', 'created_at']
 
 
+class PublicFollowSerializer(serializers.ModelSerializer):
+    follower = SimpleUserSerializer(read_only=True)
+    following = SimpleUserSerializer(read_only=True)
+
+    class Meta:
+        model = Follow
+        fields = ['id', 'follower', 'following', 'created_at']
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
