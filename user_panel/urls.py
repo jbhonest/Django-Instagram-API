@@ -5,7 +5,7 @@ from .views import FollowViewSet, UserProfileViewSet, UserViewSet, RegisterApi
 
 
 router = routers.DefaultRouter()
-router.register('follow', FollowViewSet)
+router.register('follow', FollowViewSet, basename='follow')
 router.register('users', UserViewSet, basename='user')
 router.register('profile', UserProfileViewSet, basename='userprofile')
 

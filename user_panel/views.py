@@ -11,12 +11,14 @@ from .serializers import FollowSerializer, UserProfileSerializer, UserListSerial
 
 
 class FollowViewSet(viewsets.ModelViewSet):
-    queryset = Follow.objects.order_by('-pk')
     serializer_class = FollowSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter, filters.SearchFilter,)
     filterset_fields = ('follower', 'following')
+
+    def get_queryset(self):
+        return Follow.objects.filter(follower=self.request.user.id)
 
     def create(self, request, *args, **kwargs):
         try:
@@ -62,6 +64,5 @@ class RegisterApi(generics.GenericAPIView):
         user = serializer.save()
         token, _ = Token.objects.get_or_create(user=serializer.instance)
         return Response({
-            "user": UserProfileSerializer(user, context=self.get_serializer_context()).data,
-            "message": "User Created Successfully.  Now perform Login to get your token",
+            "user": UserProfileSerializer(user, context=self.get_serializer_context()).data
         })
