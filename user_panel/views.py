@@ -56,8 +56,7 @@ class RegisterApi(generics.GenericAPIView):
         })
 
 
-class PublicUsersViewSet(ListModelMixin, RetrieveModelMixin,
-                         viewsets.GenericViewSet):
+class PublicUsersViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserListSerializer
     queryset = CustomUser.objects.filter(is_public=True).order_by('-pk')
@@ -66,8 +65,7 @@ class PublicUsersViewSet(ListModelMixin, RetrieveModelMixin,
     filterset_fields = ('username', 'email', 'first_name', 'last_name')
 
 
-class PublicFollowViewSet(ListModelMixin, RetrieveModelMixin,
-                          viewsets.GenericViewSet):
+class PublicFollowViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Follow.objects.filter(follower__is_public=True).order_by('-pk')
     serializer_class = PublicFollowSerializer
     permission_classes = [permissions.IsAuthenticated]
