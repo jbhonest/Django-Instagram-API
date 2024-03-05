@@ -18,7 +18,7 @@ class FollowViewSet(viewsets.ModelViewSet):
     filterset_fields = ('follower', 'following')
 
     def get_queryset(self):
-        return Follow.objects.filter(follower=self.request.user.id)
+        return Follow.objects.filter(follower=self.request.user.id).order_by('-pk')
 
     def create(self, request, *args, **kwargs):
         try:
@@ -43,16 +43,6 @@ class UserProfileViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin,
         return CustomUser.objects.filter(id=self.request.user.id)
 
 
-class PublicUsersViewSet(ListModelMixin, RetrieveModelMixin,
-                         viewsets.GenericViewSet):
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = UserListSerializer
-    queryset = CustomUser.objects.filter(is_public=True).order_by('-pk')
-    filter_backends = (DjangoFilterBackend,
-                       filters.OrderingFilter, filters.SearchFilter,)
-    filterset_fields = ('username', 'email', 'first_name', 'last_name')
-
-
 class RegisterApi(generics.GenericAPIView):
     serializer_class = RegisterSerializer
 
@@ -64,6 +54,16 @@ class RegisterApi(generics.GenericAPIView):
         return Response({
             "user": UserProfileSerializer(user, context=self.get_serializer_context()).data
         })
+
+
+class PublicUsersViewSet(ListModelMixin, RetrieveModelMixin,
+                         viewsets.GenericViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserListSerializer
+    queryset = CustomUser.objects.filter(is_public=True).order_by('-pk')
+    filter_backends = (DjangoFilterBackend,
+                       filters.OrderingFilter, filters.SearchFilter,)
+    filterset_fields = ('username', 'email', 'first_name', 'last_name')
 
 
 class PublicFollowViewSet(ListModelMixin, RetrieveModelMixin,
