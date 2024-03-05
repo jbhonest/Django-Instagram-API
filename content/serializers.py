@@ -9,10 +9,18 @@ class SimplePostImageSerializer(serializers.ModelSerializer):
         fields = ['id', 'image', 'created_at']
 
 
+class SimpleStoryLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StoryLike
+        fields = ['id', 'user', 'created_at']
+
+
 class SimpleStoryImageSerializer(serializers.ModelSerializer):
+    likes = SimpleStoryLikeSerializer(many=True, read_only=True)
+
     class Meta:
         model = StoryImage
-        fields = ['id', 'image', 'created_at']
+        fields = ['id', 'image', 'created_at', 'likes']
 
 
 class SimpleHashtagSerializer(serializers.ModelSerializer):
@@ -39,12 +47,6 @@ class SimplePostLikeSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'created_at']
 
 
-class SimpleStoryLikeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = StoryLike
-        fields = ['id', 'user', 'created_at']
-
-
 class PostSerializer(serializers.ModelSerializer):
     images = SimplePostImageSerializer(many=True, read_only=True)
     hashtags = SimpleHashtagSerializer(many=True, read_only=True)
@@ -67,12 +69,11 @@ class PostSerializer(serializers.ModelSerializer):
 
 class StorySerializer(serializers.ModelSerializer):
     images = SimpleStoryImageSerializer(many=True, read_only=True)
-    likes = SimpleStoryLikeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Story
         fields = ('id',  'user', 'created_at',
-                  'images',  'likes')
+                  'images')
 
     def get_fields(self):
         fields = super().get_fields()
@@ -89,9 +90,11 @@ class PostImageSerializer(serializers.ModelSerializer):
 
 
 class StoryImageSerializer(serializers.ModelSerializer):
+    likes = SimpleStoryLikeSerializer(many=True, read_only=True)
+
     class Meta:
         model = StoryImage
-        fields = ('id', 'story', 'image', 'created_at')
+        fields = ('id', 'story', 'image', 'created_at', 'likes')
 
 
 class MentionSerializer(serializers.ModelSerializer):
