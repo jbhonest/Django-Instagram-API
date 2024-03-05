@@ -1,11 +1,13 @@
 from rest_framework import routers
-from .views import PostViewSet, ImageViewSet, MentionViewSet, HashtagViewSet
+from .views import PostViewSet, PostImageViewSet, StoryImageViewSet, MentionViewSet, HashtagViewSet, StoryViewSet
 
 router = routers.DefaultRouter()
 router.register('posts', PostViewSet)
-router.register('images', ImageViewSet, basename='images')
+router.register('post_images', PostImageViewSet, basename='post_images')
 router.register('hashtags', HashtagViewSet, basename='hashtags')
 router.register('mentions', MentionViewSet, basename='mentions')
+router.register('stories', StoryViewSet, basename='stories')
+router.register('story_images', StoryImageViewSet, basename='story_images')
 
 
 # URLConf

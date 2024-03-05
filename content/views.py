@@ -1,8 +1,8 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters, permissions
-from .models import Post, PostImage, Mention, Hashtag
-from .serializers import PostSerializer, ImageSerializer, MentionSerializer, HashtagSerializer
+from .models import Post, Story, PostImage, StoryImage, Mention, Hashtag
+from .serializers import PostSerializer, PostImageSerializer, MentionSerializer, HashtagSerializer, StoryImageSerializer, StorySerializer
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -24,8 +24,26 @@ class PostViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class ImageViewSet(viewsets.ModelViewSet):
-    serializer_class = ImageSerializer
+class StoryViewSet(viewsets.ModelViewSet):
+    serializer_class = StorySerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Story.objects.order_by('-pk')
+    filter_backends = (DjangoFilterBackend,
+                       filters.OrderingFilter, filters.SearchFilter,)
+    filterset_fields = ('user',)
+
+    def get_queryset(self):
+        return Story.objects.filter(user=self.request.user.id).order_by('-pk')
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class PostImageViewSet(viewsets.ModelViewSet):
+    serializer_class = PostImageSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter, filters.SearchFilter,)
@@ -39,6 +57,24 @@ class ImageViewSet(viewsets.ModelViewSet):
         post_id = self.request.data.get('post', None)
         post = get_object_or_404(Post, id=post_id, user=self.request.user)
         serializer.save(post=post)
+
+
+class StoryImageViewSet(viewsets.ModelViewSet):
+    serializer_class = StoryImageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = (DjangoFilterBackend,
+                       filters.OrderingFilter, filters.SearchFilter,)
+    filterset_fields = ('story',)
+
+    def get_queryset(self):
+        return StoryImage.objects.filter(story__user=self.request.user.id).order_by('-pk')
+
+    def perform_create(self, serializer):
+        # Ensure the user can only add images to their own stories
+        story_id = self.request.data.get('story', None)
+        story = get_object_or_404(
+            Story, id=story_id, user=self.request.user)
+        serializer.save(story=story)
 
 
 class MentionViewSet(viewsets.ModelViewSet):

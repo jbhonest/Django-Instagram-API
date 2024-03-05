@@ -1,11 +1,17 @@
 from rest_framework import serializers
-from .models import Post, PostImage, Mention, Hashtag
-from user_activity.models import Comment, PostLike
+from .models import Post, Story, PostImage, StoryImage, Mention, Hashtag
+from user_activity.models import Comment, PostLike, StoryLike
 
 
-class SimpleImageSerializer(serializers.ModelSerializer):
+class SimplePostImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostImage
+        fields = ['id', 'image', 'created_at']
+
+
+class SimpleStoryImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StoryImage
         fields = ['id', 'image', 'created_at']
 
 
@@ -27,17 +33,23 @@ class SimpleCommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'text', 'created_at']
 
 
-class SimpleLikeSerializer(serializers.ModelSerializer):
+class SimplePostLikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostLike
         fields = ['id', 'user', 'created_at']
 
 
+class SimpleStoryLikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StoryLike
+        fields = ['id', 'user', 'created_at']
+
+
 class PostSerializer(serializers.ModelSerializer):
-    images = SimpleImageSerializer(many=True, read_only=True)
+    images = SimplePostImageSerializer(many=True, read_only=True)
     hashtags = SimpleHashtagSerializer(many=True, read_only=True)
     comments = SimpleCommentSerializer(many=True, read_only=True)
-    likes = SimpleLikeSerializer(many=True, read_only=True)
+    likes = SimplePostLikeSerializer(many=True, read_only=True)
     mentions = SimpleMentionSerializer(many=True, read_only=True)
 
     class Meta:
@@ -53,10 +65,33 @@ class PostSerializer(serializers.ModelSerializer):
         return fields
 
 
-class ImageSerializer(serializers.ModelSerializer):
+class StorySerializer(serializers.ModelSerializer):
+    images = SimpleStoryImageSerializer(many=True, read_only=True)
+    likes = SimpleStoryLikeSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Story
+        fields = ('id',  'user', 'created_at',
+                  'images',  'likes')
+
+    def get_fields(self):
+        fields = super().get_fields()
+        if 'user' in fields:
+            # Make user field read_only in the browsable API
+            fields['user'].read_only = True
+        return fields
+
+
+class PostImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostImage
         fields = ('id', 'post', 'image', 'created_at')
+
+
+class StoryImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StoryImage
+        fields = ('id', 'story', 'image', 'created_at')
 
 
 class MentionSerializer(serializers.ModelSerializer):
