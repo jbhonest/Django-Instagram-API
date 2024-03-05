@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Post, Story, PostImage, StoryImage, Mention, Hashtag
 from user_activity.models import Comment, PostLike, StoryLike
+from user_panel.serializers import SimpleUserSerializer
 
 
 class SimplePostImageSerializer(serializers.ModelSerializer):
@@ -53,6 +54,7 @@ class PostSerializer(serializers.ModelSerializer):
     comments = SimpleCommentSerializer(many=True, read_only=True)
     likes = SimplePostLikeSerializer(many=True, read_only=True)
     mentions = SimpleMentionSerializer(many=True, read_only=True)
+    user = SimpleUserSerializer(read_only=True)
 
     class Meta:
         model = Post
@@ -69,6 +71,7 @@ class PostSerializer(serializers.ModelSerializer):
 
 class StorySerializer(serializers.ModelSerializer):
     images = SimpleStoryImageSerializer(many=True, read_only=True)
+    user = SimpleUserSerializer(read_only=True)
 
     class Meta:
         model = Story
