@@ -1,8 +1,12 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters, permissions
+from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from .models import Post, Story, PostImage, StoryImage, Mention, Hashtag
 from .serializers import PostSerializer, PostImageSerializer, MentionSerializer, HashtagSerializer, StoryImageSerializer, StorySerializer
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -109,3 +113,20 @@ class HashtagViewSet(viewsets.ModelViewSet):
         post_id = self.request.data.get('post', None)
         post = get_object_or_404(Post, id=post_id, user=self.request.user)
         serializer.save(post=post)
+
+
+class FollowingPostViewSet(ListModelMixin, RetrieveModelMixin,
+                           viewsets.GenericViewSet):
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Post.objects.order_by('-pk')
+    filter_backends = (DjangoFilterBackend,
+                       filters.OrderingFilter, filters.SearchFilter,)
+    filterset_fields = ('user',)
+    search_fields = ('caption',)
+
+    def get_queryset(self):
+        user_profile = User.objects.get(id=self.request.user.id)
+        following = user_profile.following.all()
+        following_ids = (user.id for user in following)
+        return Post.objects.filter(user__in=following_ids).order_by('-pk')
