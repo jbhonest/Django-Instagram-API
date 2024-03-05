@@ -44,16 +44,32 @@ class ImageViewSet(viewsets.ModelViewSet):
 class MentionViewSet(viewsets.ModelViewSet):
     serializer_class = MentionSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Mention.objects.order_by('-pk')
     filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter, filters.SearchFilter,)
     filterset_fields = ('post', 'user')
+
+    def get_queryset(self):
+        return Mention.objects.filter(post__user=self.request.user.id).order_by('-pk')
+
+    def perform_create(self, serializer):
+        # Ensure the user can only add mentions to their own posts
+        post_id = self.request.data.get('post', None)
+        post = get_object_or_404(Post, id=post_id, user=self.request.user)
+        serializer.save(post=post)
 
 
 class HashtagViewSet(viewsets.ModelViewSet):
     serializer_class = HashtagSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Hashtag.objects.order_by('-pk')
     filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter, filters.SearchFilter,)
     filterset_fields = ('post', 'title')
+
+    def get_queryset(self):
+        return Hashtag.objects.filter(post__user=self.request.user.id).order_by('-pk')
+
+    def perform_create(self, serializer):
+        # Ensure the user can only add hashtag to their own posts
+        post_id = self.request.data.get('post', None)
+        post = get_object_or_404(Post, id=post_id, user=self.request.user)
+        serializer.save(post=post)
