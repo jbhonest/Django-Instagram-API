@@ -127,3 +127,17 @@ class FollowingPostViewSet(viewsets.ReadOnlyModelViewSet):
         users = user.following.all()
         following_users = (f.following for f in users)
         return Post.objects.filter(user__in=following_users).order_by('-pk')
+
+
+class FollowingStoryViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = StorySerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = (DjangoFilterBackend,
+                       filters.OrderingFilter, filters.SearchFilter,)
+    filterset_fields = ('user',)
+
+    def get_queryset(self):
+        user = self.request.user
+        users = user.following.all()
+        following_users = (f.following for f in users)
+        return Story.objects.filter(user__in=following_users).order_by('-pk')
