@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.db import IntegrityError
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Comment, Like
-from .serializers import CommentSerializer, LikeSerializer
+from .models import Comment, PostLike
+from .serializers import CommentSerializer, PostLikeSerializer
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -23,10 +23,10 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class LikeViewSet(viewsets.ModelViewSet):
-    serializer_class = LikeSerializer
+class PostLikeViewSet(viewsets.ModelViewSet):
+    serializer_class = PostLikeSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Like.objects.order_by('-pk')
+    queryset = PostLike.objects.order_by('-pk')
     filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter, filters.SearchFilter,)
     filterset_fields = ('post', 'user')

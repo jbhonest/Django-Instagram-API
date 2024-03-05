@@ -15,7 +15,7 @@ class Comment(models.Model):
         return self.text
 
 
-class Like(models.Model):
+class PostLike(models.Model):
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name='likes')
     user = models.ForeignKey(

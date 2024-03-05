@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters, permissions
-from .models import Post, Image, Mention, Hashtag
+from .models import Post, PostImage, Mention, Hashtag
 from .serializers import PostSerializer, ImageSerializer, MentionSerializer, HashtagSerializer
 
 
@@ -32,7 +32,7 @@ class ImageViewSet(viewsets.ModelViewSet):
     filterset_fields = ('post',)
 
     def get_queryset(self):
-        return Image.objects.filter(post__user=self.request.user.id).order_by('-pk')
+        return PostImage.objects.filter(post__user=self.request.user.id).order_by('-pk')
 
     def perform_create(self, serializer):
         # Ensure the user can only add images to their own posts

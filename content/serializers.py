@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from .models import Post, Image, Mention, Hashtag
-from user_activity.models import Comment, Like
+from .models import Post, PostImage, Mention, Hashtag
+from user_activity.models import Comment, PostLike
 
 
 class SimpleImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Image
+        model = PostImage
         fields = ['id', 'image', 'created_at']
 
 
@@ -29,7 +29,7 @@ class SimpleCommentSerializer(serializers.ModelSerializer):
 
 class SimpleLikeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Like
+        model = PostLike
         fields = ['id', 'user', 'created_at']
 
 
@@ -55,7 +55,7 @@ class PostSerializer(serializers.ModelSerializer):
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Image
+        model = PostImage
         fields = ('id', 'post', 'image', 'created_at')
 
 
