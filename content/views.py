@@ -3,15 +3,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters, permissions
 from .models import Post, Story, PostImage, StoryImage, Mention, Hashtag
 from .serializers import PostSerializer, PostImageSerializer, MentionSerializer, HashtagSerializer, StoryImageSerializer, StorySerializer
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
 
 
 class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Post.objects.order_by('-pk')
     filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter, filters.SearchFilter,)
     filterset_fields = ('user',)

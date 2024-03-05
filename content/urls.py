@@ -6,7 +6,7 @@ router.register('following_posts', FollowingPostViewSet,
                 basename='following_posts')
 router.register('following_stories', FollowingStoryViewSet,
                 basename='following_stories')
-router.register('posts', PostViewSet)
+router.register('posts', PostViewSet, basename='posts')
 router.register('post_images', PostImageViewSet, basename='post_images')
 router.register('hashtags', HashtagViewSet, basename='hashtags')
 router.register('mentions', MentionViewSet, basename='mentions')
