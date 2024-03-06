@@ -9,5 +9,7 @@ user_activity/__pycache__
 user_activity/migrations/__pycache__
 user_panel/__pycache__
 user_panel/migrations/__pycache__
+logger/__pycache__
+logger/migrations/__pycache__
 
 

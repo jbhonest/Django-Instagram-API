@@ -1,3 +1,4 @@
 from django.contrib import admin
+from .models import PostView
 
-# Register your models here.
+admin.site.register(PostView)
