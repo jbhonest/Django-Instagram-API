@@ -11,5 +11,8 @@ user_panel/__pycache__
 user_panel/migrations/__pycache__
 logger/__pycache__
 logger/migrations/__pycache__
+direct/__pycache__
+direct/migrations/__pycache__
+
 
 
