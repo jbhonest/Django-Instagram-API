@@ -53,6 +53,10 @@ class RegisterApi(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+
+        # Create a profile for the registered user
+        Profile.objects.create(user=user)
+
         token, _ = Token.objects.get_or_create(user=serializer.instance)
         return Response({
             "user": UserAccountSerializer(user, context=self.get_serializer_context()).data
