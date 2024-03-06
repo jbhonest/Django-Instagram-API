@@ -1,11 +1,14 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db import IntegrityError
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework import status
 from rest_framework import viewsets, filters, generics
 from rest_framework import permissions
 from rest_framework.mixins import DestroyModelMixin, RetrieveModelMixin, UpdateModelMixin, ListModelMixin
+from logger.models import ProfileView
 from .models import Follow, CustomUser
 from .serializers import FollowSerializer, UserProfileSerializer, UserListSerializer, RegisterSerializer, PublicFollowSerializer
 
@@ -42,6 +45,14 @@ class UserProfileViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin,
     def get_queryset(self):
         return CustomUser.objects.filter(id=self.request.user.id)
 
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+        profile = self.get_object()
+        # Trigger the profile view signal
+        post_save.send(sender=CustomUser, instance=profile,
+                       created=False, request=request)
+        return response
+
 
 class RegisterApi(generics.GenericAPIView):
     serializer_class = RegisterSerializer
@@ -72,3 +83,10 @@ class PublicFollowViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter, filters.SearchFilter,)
     filterset_fields = ('follower', 'following')
+
+
+@receiver(post_save, sender=CustomUser)
+def log_profile_view(sender, instance, created, **kwargs):
+    if not created:
+        current_user = kwargs.get('request').user
+        ProfileView.objects.create(profile=instance, viewer=current_user)
