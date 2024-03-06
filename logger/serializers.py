@@ -12,6 +12,7 @@ class PostViewSerializer(serializers.ModelSerializer):
 
 
 class ProfileViewSerializer(serializers.ModelSerializer):
+    profile = SimpleUserSerializer()
     viewer = SimpleUserSerializer()
 
     class Meta:

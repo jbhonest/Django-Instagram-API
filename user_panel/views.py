@@ -45,13 +45,13 @@ class UserProfileViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin,
     def get_queryset(self):
         return CustomUser.objects.filter(id=self.request.user.id)
 
-    def retrieve(self, request, *args, **kwargs):
-        response = super().retrieve(request, *args, **kwargs)
-        profile = self.get_object()
-        # Trigger the profile view signal
-        post_save.send(sender=CustomUser, instance=profile,
-                       created=False, request=request)
-        return response
+    # def retrieve(self, request, *args, **kwargs):
+    #     response = super().retrieve(request, *args, **kwargs)
+    #     profile = self.get_object()
+    #     # Trigger the profile view signal
+    #     post_save.send(sender=CustomUser, instance=profile,
+    #                    created=False, request=request)
+    #     return response
 
 
 class RegisterApi(generics.GenericAPIView):
@@ -67,7 +67,7 @@ class RegisterApi(generics.GenericAPIView):
         })
 
 
-class PublicUsersViewSet(viewsets.ReadOnlyModelViewSet):
+class PublicProfilesViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserListSerializer
     queryset = CustomUser.objects.filter(is_public=True).order_by('-pk')
@@ -85,8 +85,27 @@ class PublicFollowViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_fields = ('follower', 'following')
 
 
-@receiver(post_save, sender=CustomUser)
-def log_profile_view(sender, instance, created, **kwargs):
-    if not created:
-        current_user = kwargs.get('request').user
-        ProfileView.objects.create(profile=instance, viewer=current_user)
+class FollowingUserProfileViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = (DjangoFilterBackend,
+                       filters.OrderingFilter, filters.SearchFilter,)
+    filterset_fields = ('username',)
+
+    def get_queryset(self):
+        return CustomUser.objects.filter(id=self.request.user.id)
+
+    # def retrieve(self, request, *args, **kwargs):
+    #     response = super().retrieve(request, *args, **kwargs)
+    #     profile = self.get_object()
+    #     # Trigger the profile view signal
+    #     post_save.send(sender=CustomUser, instance=profile,
+    #                    created=False, request=request)
+    #     return response
+
+
+# @receiver(post_save, sender=CustomUser)
+# def log_profile_view(sender, instance, created, **kwargs):
+#     if not created:
+#         current_user = kwargs.get('request').user
+#         ProfileView.objects.create(profile=instance, viewer=current_user)
