@@ -80,15 +80,6 @@ class PublicProfilesViewSet(viewsets.ReadOnlyModelViewSet):
         return response
 
 
-class PublicFollowViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Follow.objects.filter(follower__is_public=True).order_by('-pk')
-    serializer_class = PublicFollowSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    filter_backends = (DjangoFilterBackend,
-                       filters.OrderingFilter, filters.SearchFilter,)
-    filterset_fields = ('follower', 'following')
-
-
 class FollowingProfilesViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PublicProfilesSerializer
     permission_classes = [permissions.IsAuthenticated]
