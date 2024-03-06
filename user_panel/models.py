@@ -15,3 +15,13 @@ class Follow(models.Model):
 
     class Meta:
         unique_together = ['follower', 'following']
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True)
+    profile_picture = models.ImageField(
+        upload_to='profile_pics/', blank=True, null=True)
+
+    def __str__(self):
+        return self.user.username

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Follow, CustomUser
+from .models import Follow, CustomUser, Profile
 
 
 @admin.register(CustomUser)
@@ -26,3 +26,10 @@ class FollowAdmin(admin.ModelAdmin):
     list_display = ['id', 'follower', 'following', 'created_at']
     search_fields = ['follower__username', 'following__username']
     list_filter = ['created_at', 'follower', 'following']
+
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'bio', 'profile_picture')
+    search_fields = ('user', 'bio')
+    ordering = ('-id',)

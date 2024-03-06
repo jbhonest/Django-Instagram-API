@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import PostView, ProfileView
-from user_panel.serializers import SimpleUserSerializer
+from user_panel.serializers import SimpleUserSerializer, ProfileSerializer
 
 
 class PostViewSerializer(serializers.ModelSerializer):
@@ -12,7 +12,7 @@ class PostViewSerializer(serializers.ModelSerializer):
 
 
 class ProfileViewSerializer(serializers.ModelSerializer):
-    profile = SimpleUserSerializer()
+    profile = ProfileSerializer()
     viewer = SimpleUserSerializer()
 
     class Meta:

@@ -1,6 +1,7 @@
 from django.db import models
 from content.models import Post
 from django.conf import settings
+from user_panel.models import Profile
 
 
 class PostView(models.Model):
@@ -12,7 +13,7 @@ class PostView(models.Model):
 
 class ProfileView(models.Model):
     profile = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profiles')
+        Profile, on_delete=models.CASCADE, related_name='profiles')
     viewer = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

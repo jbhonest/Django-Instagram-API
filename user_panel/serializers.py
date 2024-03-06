@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Follow, CustomUser
+from .models import Follow, CustomUser, Profile
 
 
 class SimpleUserSerializer(serializers.ModelSerializer):
@@ -59,3 +59,9 @@ class RegisterSerializer(serializers.ModelSerializer):
                                               last_name=validated_data['last_name'],
                                               is_public=validated_data['is_public'],)
         return user
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('id', 'user', 'bio', 'profile_picture')
