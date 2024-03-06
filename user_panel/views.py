@@ -89,15 +89,19 @@ class PublicFollowViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_fields = ('follower', 'following')
 
 
-class FollowingUserProfileViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = UserAccountSerializer
+class FollowingProfilesViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = PublicProfilesSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter, filters.SearchFilter,)
-    filterset_fields = ('username',)
+    filterset_fields = ('user',)
 
     def get_queryset(self):
-        return CustomUser.objects.filter(id=self.request.user.id)
+        # Get the profiles of users whom the authenticated user is following
+        users = self.request.user.following.all()
+        following_users = (f.following for f in users)
+        following_profiles = Profile.objects.filter(user__in=following_users)
+        return following_profiles
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
