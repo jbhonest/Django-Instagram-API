@@ -1,7 +1,10 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from rest_framework import viewsets, filters, permissions
 from .models import Post, Story, PostImage, StoryImage, Mention, Hashtag
+from logger.models import PostView
 from .serializers import PostSerializer, PostImageSerializer, MentionSerializer, HashtagSerializer, StoryImageSerializer, StorySerializer
 
 
@@ -21,6 +24,14 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save(user=self.request.user)
+
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+        post = self.get_object()
+        # Trigger the post view signal
+        post_save.send(sender=Post, instance=post,
+                       created=False, request=request)
+        return response
 
 
 class StoryViewSet(viewsets.ModelViewSet):
@@ -124,6 +135,14 @@ class FollowingPostViewSet(viewsets.ReadOnlyModelViewSet):
         following_users = (f.following for f in users)
         return Post.objects.filter(user__in=following_users).order_by('-pk')
 
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+        post = self.get_object()
+        # Trigger the post view signal
+        post_save.send(sender=Post, instance=post,
+                       created=False, request=request)
+        return response
+
 
 class FollowingStoryViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = StorySerializer
@@ -137,3 +156,10 @@ class FollowingStoryViewSet(viewsets.ReadOnlyModelViewSet):
         users = user.following.all()
         following_users = (f.following for f in users)
         return Story.objects.filter(user__in=following_users).order_by('-pk')
+
+
+@receiver(post_save, sender=Post)
+def log_post_view(sender, instance, created, **kwargs):
+    if not created:
+        current_user = kwargs.get('request').user
+        PostView.objects.create(post=instance, viewer=current_user)
