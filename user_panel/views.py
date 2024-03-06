@@ -67,6 +67,14 @@ class PublicProfilesViewSet(viewsets.ReadOnlyModelViewSet):
                        filters.OrderingFilter, filters.SearchFilter,)
     filterset_fields = ('user', )
 
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+        profile = self.get_object()
+        # Trigger the profile view signal
+        post_save.send(sender=Profile, instance=profile,
+                       created=False, request=request)
+        return response
+
 
 class PublicFollowViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Follow.objects.filter(follower__is_public=True).order_by('-pk')
@@ -86,14 +94,6 @@ class FollowingUserProfileViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         return CustomUser.objects.filter(id=self.request.user.id)
-
-    # def retrieve(self, request, *args, **kwargs):
-    #     response = super().retrieve(request, *args, **kwargs)
-    #     profile = self.get_object()
-    #     # Trigger the profile view signal
-    #     post_save.send(sender=CustomUser, instance=profile,
-    #                    created=False, request=request)
-    #     return response
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
