@@ -8,6 +8,13 @@ class SimpleUserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username']
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'email',
+                  'first_name', 'last_name', 'is_public']
+
+
 class FollowSerializer(serializers.ModelSerializer):
     follower = SimpleUserSerializer(read_only=True)
     following_info = SimpleUserSerializer(source='following', read_only=True)
@@ -27,7 +34,7 @@ class PublicFollowSerializer(serializers.ModelSerializer):
         fields = ['id', 'follower', 'following', 'created_at']
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class UserAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('id', 'username', 'password',
@@ -35,11 +42,12 @@ class UserProfileSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
 
-class UserListSerializer(serializers.ModelSerializer):
+class PublicProfilesSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
     class Meta:
-        model = CustomUser
-        fields = ('id', 'username', 'email',
-                  'first_name', 'last_name', 'is_public')
+        model = Profile
+        fields = ('id', 'user', 'bio', 'profile_picture')
 
 
 class RegisterSerializer(serializers.ModelSerializer):

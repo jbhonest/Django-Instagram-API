@@ -10,7 +10,7 @@ from rest_framework import permissions
 from rest_framework.mixins import DestroyModelMixin, RetrieveModelMixin, UpdateModelMixin, ListModelMixin
 from logger.models import ProfileView
 from .models import Follow, CustomUser, Profile
-from .serializers import FollowSerializer, UserProfileSerializer, UserListSerializer, RegisterSerializer, PublicFollowSerializer, ProfileSerializer
+from .serializers import FollowSerializer, UserAccountSerializer, PublicProfilesSerializer, RegisterSerializer, PublicFollowSerializer, ProfileSerializer
 
 
 class FollowViewSet(viewsets.ModelViewSet):
@@ -33,10 +33,10 @@ class FollowViewSet(viewsets.ModelViewSet):
         serializer.save(follower=self.request.user)
 
 
-class UserProfileViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin,
+class UserAccountViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin,
                          DestroyModelMixin,
                          viewsets.GenericViewSet):
-    serializer_class = UserProfileSerializer
+    serializer_class = UserAccountSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter, filters.SearchFilter,)
@@ -55,17 +55,17 @@ class RegisterApi(generics.GenericAPIView):
         user = serializer.save()
         token, _ = Token.objects.get_or_create(user=serializer.instance)
         return Response({
-            "user": UserProfileSerializer(user, context=self.get_serializer_context()).data
+            "user": UserAccountSerializer(user, context=self.get_serializer_context()).data
         })
 
 
 class PublicProfilesViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = UserListSerializer
-    queryset = CustomUser.objects.filter(is_public=True).order_by('-pk')
+    serializer_class = PublicProfilesSerializer
+    queryset = Profile.objects.filter(user__is_public=True).order_by('-pk')
     filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter, filters.SearchFilter,)
-    filterset_fields = ('username', 'email', 'first_name', 'last_name')
+    filterset_fields = ('user', )
 
 
 class PublicFollowViewSet(viewsets.ReadOnlyModelViewSet):
@@ -78,7 +78,7 @@ class PublicFollowViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class FollowingUserProfileViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = UserProfileSerializer
+    serializer_class = UserAccountSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = (DjangoFilterBackend,
                        filters.OrderingFilter, filters.SearchFilter,)
@@ -106,7 +106,6 @@ class ProfileViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         response = super().retrieve(request, *args, **kwargs)
         profile = self.get_object()
-        print(profile.bio)
         # Trigger the profile view signal
         post_save.send(sender=Profile, instance=profile,
                        created=False, request=request)
