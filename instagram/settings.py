@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'content.apps.ContentConfig',
     'user_activity.apps.UserActivityConfig',
     'user_panel.apps.UserPanelConfig',
+    'logger.apps.LoggerConfig',
 
 ]
 
