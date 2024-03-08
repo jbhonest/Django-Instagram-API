@@ -79,11 +79,11 @@ Use tools like curl, httpie, or Postman to interact with the API.
 
 
 ## Django Admin
-First create an admin user:
+First, create an admin user:
 ```bash
 python manage.py createsuperuser
 ```
-Then access the Django admin interface at http://127.0.0.1:8000/admin/ to manage contacts.
+Then, access the Django admin interface at http://127.0.0.1:8000/admin/ to manage contacts.
 
 
 ---
