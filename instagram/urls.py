@@ -9,6 +9,7 @@ urlpatterns = [
     path('user_activity/', include('user_activity.urls')),
     path('user_panel/', include('user_panel.urls')),
     path('logger/', include('logger.urls')),
+    path('direct/', include('direct.urls')),
 
     # SimpleJWT URLs
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
