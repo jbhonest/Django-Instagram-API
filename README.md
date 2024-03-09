@@ -24,7 +24,7 @@ This Django app is designed to replicate the basic functionality of Instagram, p
 **5. Direct Messaging**
   - Send and receive direct messages privately.
 
-**5. Analytics**
+**6. Analytics**
 - Track post views to understand content popularity.
 - Monitor profile views for user engagement insights.
 
