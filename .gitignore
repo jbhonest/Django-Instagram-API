@@ -13,6 +13,8 @@ logger/__pycache__
 logger/migrations/__pycache__
 direct/__pycache__
 direct/migrations/__pycache__
+home/__pycache__
+home/migrations/__pycache__
 celerybeat-schedule.bak
 celerybeat-schedule.dat
 celerybeat-schedule.dir
