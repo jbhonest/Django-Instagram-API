@@ -2,15 +2,30 @@
 <html>
 
 <head>
-    <title>Index Page</title>
+    <title>Django Instagram API</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
 </head>
 
 <body>
-    <h1>Welcome to the Index Page</h1>
+    <h1>Django Instagram API</h1>
     <ul>
-        <!-- <li><a href="">App 1</a></li> -->
-        <!-- <li><a href="">App 2</a></li> -->
-        <!-- Add links to other apps as needed -->
+        <li><a href="{{ request.build_absolute_uri|add:'/content/' }}">Content API root</a></li>
+        <li><a href="{{ request.build_absolute_uri|add:'/user_activity/' }}">User activity API root</a>
+        </li>
+        <li><a href="{{ request.build_absolute_uri|add:'/user_panel/' }}">User panel API root</a></li>
+        <li><a href="{{ request.build_absolute_uri|add:'/direct/' }}">Messaging API root</a></li>
+        <li><a href="{{ request.build_absolute_uri|add:'/logger/' }}">Analytics API root</a></li>
+        <p></p>
+        <li><a href="{{ request.build_absolute_uri|add:'/user_panel/register/' }}">Registration</a>
+        </li>
+        <li><a href="{{ request.build_absolute_uri|add:'/myadmin/' }}">Admin panel</a></li>
+
+        <p></p>
+        <li><a href="{{ request.build_absolute_uri|add:'/token/' }}">Token Obtain Pair</a></li>
+        <li><a href="{{ request.build_absolute_uri|add:'/token/refresh' }}">Token Refresh</a></li>
+
     </ul>
 </body>
 

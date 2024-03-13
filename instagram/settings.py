@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_filters',
     'rest_framework_simplejwt',
+    'bootstrap5',
 
     # My Apps
     'content.apps.ContentConfig',
@@ -139,7 +140,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication')
-    if DEBUG else ('rest_framework_simplejwt.authentication.JWTAuthentication',)
+    # if DEBUG else ('rest_framework_simplejwt.authentication.JWTAuthentication',)
 }
 
 AUTH_USER_MODEL = 'user_panel.CustomUser'
@@ -147,3 +148,6 @@ AUTH_USER_MODEL = 'user_panel.CustomUser'
 # Celery Configuration
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+LOGIN_REDIRECT_URL = 'user_panel/profile/'
+LOGIN_URL = '/api-auth/login/'
