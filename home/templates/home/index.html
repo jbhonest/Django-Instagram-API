@@ -14,17 +14,19 @@
         <hr>
         <h4>API Endpoints</h4>
         <ul>
-            <li><a href="{{ request.build_absolute_uri|add:'content/' }}">Content API root</a></li>
-            <li><a href="{{ request.build_absolute_uri|add:'user_activity/' }}">User activity API root</a>
+            <li><a href="{{ request.build_absolute_uri|add:'content/' }}" target="_blank">Content API root</a></li>
+            <li><a href="{{ request.build_absolute_uri|add:'user_activity/' }}" target="_blank">User activity API
+                    root</a>
             </li>
-            <li><a href="{{ request.build_absolute_uri|add:'user_panel/' }}">User panel API root</a></li>
-            <li><a href="{{ request.build_absolute_uri|add:'direct/' }}">Messaging API root</a></li>
-            <li><a href="{{ request.build_absolute_uri|add:'logger/' }}">Analytics API root</a></li>
-            <li><a href="{{ request.build_absolute_uri|add:'user_panel/register/' }}">Registration</a>
+            <li><a href="{{ request.build_absolute_uri|add:'user_panel/' }}" target="_blank">User panel API root</a>
             </li>
-            <li><a href="{{ request.build_absolute_uri|add:'myadmin/' }}">Admin panel</a></li>
-            <li><a href="{{ request.build_absolute_uri|add:'token/' }}">Token Obtain Pair</a></li>
-            <li><a href="{{ request.build_absolute_uri|add:'token/refresh' }}">Token Refresh</a></li>
+            <li><a href="{{ request.build_absolute_uri|add:'direct/' }}" target="_blank">Messaging API root</a></li>
+            <li><a href="{{ request.build_absolute_uri|add:'logger/' }}" target="_blank">Analytics API root</a></li>
+            <li><a href="{{ request.build_absolute_uri|add:'user_panel/register/' }}" target="_blank">Registration</a>
+            </li>
+            <li><a href="{{ request.build_absolute_uri|add:'myadmin/' }}" target="_blank">Admin panel</a></li>
+            <li><a href="{{ request.build_absolute_uri|add:'token/' }}" target="_blank">Token Obtain Pair</a></li>
+            <li><a href="{{ request.build_absolute_uri|add:'token/refresh' }}" target="_blank">Token Refresh</a></li>
 
         </ul>
     </div>
